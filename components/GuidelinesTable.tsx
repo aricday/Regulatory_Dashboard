@@ -3,7 +3,6 @@
 import { ExternalLink } from 'lucide-react';
 import type { GuidelinesContent } from '@/types/guidelines';
 import { GuidelinesTableCell } from './GuidelinesTableCell';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface GuidelinesTableProps {
   guidelines: GuidelinesContent;
@@ -26,43 +25,22 @@ export function GuidelinesTable({ guidelines }: GuidelinesTableProps) {
         </a>
       </div>
 
-      {/* Desktop: 3-column grid */}
-      <div className="hidden md:grid md:grid-cols-3 md:gap-6">
-        <Column title="Feature Support">
+      <div className="space-y-4">
+        <Section title="Feature Support">
           <GuidelinesTableCell blocks={featureSupport} emptyMessage="No feature details available." />
-        </Column>
-        <Column title="Regulatory Requirements">
+        </Section>
+        <Section title="Regulatory Requirements">
           <GuidelinesTableCell blocks={regulatoryRequirements} emptyMessage="No regulatory data found." />
-        </Column>
-        <Column title="Best Practices">
+        </Section>
+        <Section title="Best Practices">
           <GuidelinesTableCell blocks={bestPractices} emptyMessage="No best practices documented." />
-        </Column>
-      </div>
-
-      {/* Mobile: tabbed view */}
-      <div className="md:hidden">
-        <Tabs defaultValue="features">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="features" className="text-xs">Features</TabsTrigger>
-            <TabsTrigger value="regulatory" className="text-xs">Regulatory</TabsTrigger>
-            <TabsTrigger value="practices" className="text-xs">Practices</TabsTrigger>
-          </TabsList>
-          <TabsContent value="features" className="mt-4">
-            <GuidelinesTableCell blocks={featureSupport} emptyMessage="No feature details available." />
-          </TabsContent>
-          <TabsContent value="regulatory" className="mt-4">
-            <GuidelinesTableCell blocks={regulatoryRequirements} emptyMessage="No regulatory data found." />
-          </TabsContent>
-          <TabsContent value="practices" className="mt-4">
-            <GuidelinesTableCell blocks={bestPractices} emptyMessage="No best practices documented." />
-          </TabsContent>
-        </Tabs>
+        </Section>
       </div>
     </div>
   );
 }
 
-function Column({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border rounded-lg p-4">
       <h4 className="text-sm font-bold text-gray-800 border-b-2 border-gray-200 pb-2 mb-3">
