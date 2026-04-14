@@ -24,9 +24,9 @@ curl "http://localhost:3000/api/guidelines?country=gb&channel=sms" | jq .
 
 ### The Two-Layer Split (Critical)
 
-**Client-side only:** Excel parsing (`src/lib/parser/`). SheetJS runs in the browser — the `.xlsx` file bytes never leave the user's machine. No upload endpoint exists or should be added.
+**Client-side only:** Excel parsing (`lib/parser/`). SheetJS runs in the browser — the `.xlsx` file bytes never leave the user's machine. No upload endpoint exists or should be added.
 
-**Server-side only:** Twilio guidelines scraping (`src/lib/scraper/` + `src/app/api/guidelines/route.ts`). Cheerio runs in Next.js API routes to avoid CORS. The API route also holds a server-side TTL cache (1 hour) so repeated selections don't re-fetch.
+**Server-side only:** Twilio guidelines scraping (`lib/scraper/` + `app/api/guidelines/route.ts`). Cheerio runs in Next.js API routes to avoid CORS. The API route also holds a server-side TTL cache (1 hour) so repeated selections don't re-fetch.
 
 ### Data Flow
 
@@ -39,7 +39,7 @@ RegulatoryLinkBanner (instant, from Column J of spreadsheet — no network)
                                         ↓
   ┌── if type = AlphaNumeric/SenderID ──────────────────────────────────┐
   │   getAlphaSenderSupport(isoCode)                                     │
-  │   → src/data/alphanumericSenderIdSupport.ts (static, no network)    │
+  │   → data/alphanumericSenderIdSupport.ts (static, no network)        │
   │   → merged with parseSenderId() rows from spreadsheet               │
   └─────────────────────────────────────────────────────────────────────┘
                                         ↓
@@ -54,11 +54,11 @@ Dashboard also maintains a client-side `useRef<Map>` cache so repeat selections 
 
 ### Country Name → ISO Code
 
-The spreadsheet uses full names ("United Kingdom", "Korea, South"). Twilio's URLs use ISO 2-letter codes ("gb", "kr"). Resolution lives in `src/lib/parser/normalizeCountry.ts` with a four-tier strategy: exact match → case-insensitive → curated alias map → partial match.
+The spreadsheet uses full names ("United Kingdom", "Korea, South"). Twilio's URLs use ISO 2-letter codes ("gb", "kr"). Resolution lives in `lib/parser/normalizeCountry.ts` with a four-tier strategy: exact match → case-insensitive → strip parenthetical suffixes → partial match. All 218 countries from the Weather Report are mapped.
 
 ### AlphaNumeric Sender ID — Two Data Sources (Critical)
 
-The spreadsheet's SenderID tab **only lists countries that require pre-registration** — it is NOT a complete supported-country list. The full support matrix lives in `src/data/alphanumericSenderIdSupport.ts`, which was built from the Twilio Help Center article (JS-rendered, not scrapeable at runtime).
+The spreadsheet's SenderID tab **only lists countries that require pre-registration** — it is NOT a complete supported-country list. The full support matrix lives in `data/alphanumericSenderIdSupport.ts`, which was built from the Twilio Help Center article (JS-rendered, not scrapeable at runtime).
 
 When a user selects an AlphaNumeric/SenderID type:
 
