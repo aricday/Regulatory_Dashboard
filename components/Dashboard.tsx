@@ -51,6 +51,12 @@ export function Dashboard() {
     [selectedCountry, selectedNumberType],
   );
 
+  // Used to label DYNAMIC heading in guidelines table regardless of number type selection
+  const countryAlphaSenderStatus = useMemo(
+    () => (selectedCountry ? getAlphaSenderSupport(selectedCountry)?.status : undefined),
+    [selectedCountry],
+  );
+
   // Update URL params
   useEffect(() => {
     const params = new URLSearchParams();
@@ -224,7 +230,7 @@ export function Dashboard() {
 
           {/* Step 4: Results */}
           {guidelines?.data && !guidelines.data.notFound && (
-            <GuidelinesTable guidelines={guidelines.data} />
+            <GuidelinesTable guidelines={guidelines.data} alphaSenderStatus={countryAlphaSenderStatus} />
           )}
         </>
       )}
