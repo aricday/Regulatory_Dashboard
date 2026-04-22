@@ -2,13 +2,15 @@
 
 import { ExternalLink } from 'lucide-react';
 import type { GuidelinesContent } from '@/types/guidelines';
+import type { AlphaSenderStatus } from '@/data/alphanumericSenderIdSupport';
 import { GuidelinesTableCell } from './GuidelinesTableCell';
 
 interface GuidelinesTableProps {
   guidelines: GuidelinesContent;
+  alphaSenderStatus?: AlphaSenderStatus;
 }
 
-export function GuidelinesTable({ guidelines }: GuidelinesTableProps) {
+export function GuidelinesTable({ guidelines, alphaSenderStatus }: GuidelinesTableProps) {
   const { featureSupport, regulatoryRequirements, bestPractices, sourceUrl } = guidelines;
 
   return (
@@ -27,7 +29,7 @@ export function GuidelinesTable({ guidelines }: GuidelinesTableProps) {
 
       <div className="space-y-4">
         <Section title="Feature Support">
-          <GuidelinesTableCell blocks={featureSupport} emptyMessage="No feature details available." />
+          <GuidelinesTableCell blocks={featureSupport} emptyMessage="No feature details available." alphaSenderStatus={alphaSenderStatus} highlightSupportStatus />
         </Section>
         <Section title="Regulatory Requirements">
           <GuidelinesTableCell blocks={regulatoryRequirements} emptyMessage="No regulatory data found." />
